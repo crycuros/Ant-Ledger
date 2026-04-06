@@ -206,7 +206,7 @@ const getAppIconKey = (name) => name.replace(/\s+/g, '')
 
 const LogoImg = ({ appName, domain, size = 32, style = {} }) => {
   const iconKey = getAppIconKey(appName)
-  const fallbackIcon = FALLBACK_ICONS[iconKey] || FALLBACK_ICONS['Default']
+  const FallbackIcon = FALLBACK_ICONS[iconKey] || FALLBACK_ICONS['Default']
   const fallbackColor = FALLBACK_COLORS[iconKey] || FALLBACK_COLORS['Default']
   const [imgError, setImgError] = useState(false)
 
@@ -218,7 +218,7 @@ const LogoImg = ({ appName, domain, size = 32, style = {} }) => {
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         ...style 
       }}>
-        {fallbackIcon && <fallbackIcon size={size * 0.6} color="#fff" />}
+        {FallbackIcon && <FallbackIcon size={size * 0.6} color="#fff" />}
       </div>
     )
   }
