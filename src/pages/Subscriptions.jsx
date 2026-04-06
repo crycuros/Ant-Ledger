@@ -142,7 +142,7 @@ const POPULAR_APPS = [
   { name: 'Rent', domain: null },
 ]
 
-const LOGO_DEV_KEY = 'pk_A3K1-sYYT3eQr3wWo6H-MA'
+const LOGO_DEV_KEY = import.meta.env.VITE_LOGO_DEV_KEY || 'pk_A3K1-sYYT3eQr3wWo6H-MA'
 
 const getCachedIconUrl = async (appName, domain) => {
   if (!domain) return null
@@ -166,7 +166,7 @@ const getCachedIconUrl = async (appName, domain) => {
       .catch(() => {})
     
     return logoUrl
-  } catch (err) {
+  } catch {
     return `https://img.logo.dev/${domain}?token=${LOGO_DEV_KEY}&size=128&format=png`
   }
 }
