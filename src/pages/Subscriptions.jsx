@@ -221,7 +221,12 @@ const FALLBACK_ICONS = {
   Electric: Zap, Rent: Home, Food: Utensils, Default: CreditCard
 }
 
+const getAppIconKey = (name) => name.replace(/\s+/g, '')
+
 const LogoImg = ({ appName, domain, size = 32, style = {} }) => {
+  const iconKey = getAppIconKey(appName)
+  const fallbackIcon = FALLBACK_ICONS[iconKey] || FALLBACK_ICONS['Default']
+  const fallbackColor = FALLBACK_COLORS[iconKey] || FALLBACK_COLORS['Default']
   const [iconUrl, setIconUrl] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -234,15 +239,41 @@ const LogoImg = ({ appName, domain, size = 32, style = {} }) => {
     })
   }, [appName, domain, size])
 
-  if (!domain) return null
-  if (loading) return <div style={{ width: size, height: size, ...style }} />
+  if (loading) {
+    return (
+      <div style={{ 
+        width: size, height: size, 
+        borderRadius: 6, background: fallbackColor,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        ...style 
+      }}>
+        {fallbackIcon && <fallbackIcon size={size * 0.6} color="#fff" />}
+      </div>
+    )
+  }
+
+  if (!iconUrl || !domain) {
+    return (
+      <div style={{ 
+        width: size, height: size, 
+        borderRadius: 6, background: fallbackColor,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        ...style 
+      }}>
+        {fallbackIcon && <fallbackIcon size={size * 0.6} color="#fff" />}
+      </div>
+    )
+  }
   
   return (
     <img 
       src={iconUrl} 
       alt={appName}
       style={{ ...style, width: size, height: size, borderRadius: 6 }}
-      onError={(e) => { e.target.style.display = 'none' }}
+      onError={(e) => {
+        e.target.style.display = 'none'
+        e.target.nextSibling.style.display = 'flex'
+      }}
     />
   )
 }
@@ -587,7 +618,7 @@ export const Subscriptions = () => {
                     boxShadow: '0 10px 40px rgba(0,0,0,0.15)'
                   }}>
                     {filteredApps.map(app => {
-                      const iconName = app.name.split(' ')[0]
+                      const iconKey = getAppIconKey(app.name)
                       return (
                         <button
                           key={app.name}
@@ -607,18 +638,6 @@ export const Subscriptions = () => {
                           }}
                         >
                           <LogoImg appName={app.name} domain={app.domain} size={32} />
-                          <div style={{ 
-                            width: '32px', 
-                            height: '32px', 
-                            borderRadius: '6px', 
-                            background: FALLBACK_COLORS[iconName] || FALLBACK_COLORS['Default'],
-                            display: 'none',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: '#fff'
-                          }}>
-                            {getAppIcon(iconName, 16)}
-                          </div>
                           <span style={{ fontSize: '14px', fontWeight: '500' }}>{app.name}</span>
                         </button>
                       )
