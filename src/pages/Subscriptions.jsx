@@ -6,22 +6,134 @@ import { CreditCard, Zap, Film, Headphones, ShoppingBag, Car, Home, Utensils, Du
 import { supabase } from '../lib/supabase'
 
 const POPULAR_APPS = [
+  // Streaming & Entertainment
   { name: 'Netflix', domain: 'netflix.com' },
-  { name: 'Spotify', domain: 'spotify.com' },
-  { name: 'YouTube Premium', domain: 'youtube.com' },
+  { name: 'Amazon Prime Video', domain: 'amazon.com' },
   { name: 'Disney+', domain: 'disneyplus.com' },
   { name: 'HBO Max', domain: 'hbomax.com' },
-  { name: 'Amazon Prime', domain: 'amazon.com' },
+  { name: 'Hulu', domain: 'hulu.com' },
+  { name: 'Paramount+', domain: 'paramountplus.com' },
+  { name: 'Peacock', domain: 'peacocktv.com' },
+  { name: 'Apple TV+', domain: 'apple.com' },
+  { name: 'YouTube Premium', domain: 'youtube.com' },
+  { name: 'Crunchyroll', domain: 'crunchyroll.com' },
+  { name: 'DAZN', domain: 'dazn.com' },
+  { name: 'ESPN+', domain: 'espn.com' },
+  { name: 'Discovery+', domain: 'discoveryplus.com' },
+  { name: 'Sling TV', domain: 'sling.com' },
+  { name: 'Tubi', domain: 'tubi.tv' },
+  { name: 'Roku Channel', domain: 'roku.com' },
+  { name: 'Starz', domain: 'starz.com' },
+  { name: 'Showtime', domain: 'showtime.com' },
+  { name: 'Hayu', domain: 'hayu.com' },
+  { name: 'Pluto TV', domain: 'plutotv.com' },
+  { name: 'Mubi', domain: 'mubi.com' },
+  { name: 'Acorn TV', domain: 'acorn.tv' },
+  { name: 'Curiosity Stream', domain: 'curiositystream.com' },
+  { name: 'Shudder', domain: 'shudder.com' },
+  { name: 'BritBox', domain: 'britbox.com' },
+  { name: 'FuboTV', domain: 'fubo.tv' },
+  
+  // Music & Audio
+  { name: 'Spotify Premium', domain: 'spotify.com' },
   { name: 'Apple Music', domain: 'apple.com' },
-  { name: 'Google One', domain: 'google.com' },
-  { name: 'iCloud', domain: 'icloud.com' },
-  { name: 'Dropbox', domain: 'dropbox.com' },
+  { name: 'Amazon Music', domain: 'amazon.com' },
+  { name: 'Deezer', domain: 'deezer.com' },
+  { name: 'Tidal', domain: 'tidal.com' },
+  { name: 'YouTube Music', domain: 'music.youtube.com' },
+  { name: 'SoundCloud Go+', domain: 'soundcloud.com' },
+  { name: 'Pandora Premium', domain: 'pandora.com' },
+  { name: 'Audible', domain: 'audible.com' },
+  
+  // Productivity & SaaS
   { name: 'Microsoft 365', domain: 'microsoft.com' },
+  { name: 'Google Workspace', domain: 'workspace.google.com' },
   { name: 'Notion', domain: 'notion.so' },
   { name: 'Slack', domain: 'slack.com' },
-  { name: 'Zoom', domain: 'zoom.us' },
-  { name: 'PlayStation Plus', domain: 'playstation.com' },
+  { name: 'Zoom Pro', domain: 'zoom.us' },
+  { name: 'Asana Premium', domain: 'asana.com' },
+  { name: 'Trello Premium', domain: 'trello.com' },
+  { name: 'Evernote', domain: 'evernote.com' },
+  { name: 'Dropbox', domain: 'dropbox.com' },
+  { name: 'Adobe Creative Cloud', domain: 'adobe.com' },
+  { name: 'Canva Pro', domain: 'canva.com' },
+  { name: 'Figma', domain: 'figma.com' },
+  { name: 'GitHub Pro', domain: 'github.com' },
+  { name: 'Salesforce', domain: 'salesforce.com' },
+  { name: 'HubSpot', domain: 'hubspot.com' },
+  { name: 'Jira', domain: 'atlassian.com' },
+  { name: 'Confluence', domain: 'atlassian.com' },
+  { name: 'Monday.com', domain: 'monday.com' },
+  { name: 'Webflow', domain: 'webflow.com' },
+  
+  // Cloud Storage & Backup
+  { name: 'Google One', domain: 'google.com' },
+  { name: 'iCloud+', domain: 'icloud.com' },
+  { name: 'OneDrive', domain: 'microsoft.com' },
+  { name: 'Backblaze', domain: 'backblaze.com' },
+  { name: 'pCloud', domain: 'pcloud.com' },
+  { name: 'Box', domain: 'box.com' },
+  { name: 'Sync.com', domain: 'sync.com' },
+  
+  // AI & Developer Tools
+  { name: 'ChatGPT Plus', domain: 'openai.com' },
+  { name: 'GitHub Copilot', domain: 'github.com' },
+  { name: 'Replit', domain: 'replit.com' },
+  
+  // Mobile App Premiums
+  { name: 'Telegram Premium', domain: 'telegram.org' },
+  { name: 'Snapchat+', domain: 'snapchat.com' },
+  { name: 'Reddit Premium', domain: 'reddit.com' },
+  { name: 'LinkedIn Premium', domain: 'linkedin.com' },
+  { name: 'Strava Premium', domain: 'strava.com' },
+  { name: 'Calm', domain: 'calm.com' },
+  { name: 'Headspace', domain: 'headspace.com' },
+  { name: 'MyFitnessPal Premium', domain: 'myfitnesspal.com' },
+  { name: 'Duolingo Plus', domain: 'duolingo.com' },
+  { name: 'Tinder Plus', domain: 'tinder.com' },
+  { name: 'Bumble Boost', domain: 'bumble.com' },
+  { name: 'Fitbod', domain: 'fitbod.me' },
+  { name: 'Peloton', domain: 'peloton.com' },
+  
+  // Shopping & Delivery
+  { name: 'Amazon Subscribe & Save', domain: 'amazon.com' },
+  { name: 'Instacart+', domain: 'instacart.com' },
+  { name: 'HelloFresh', domain: 'hellofresh.com' },
+  { name: 'Blue Apron', domain: 'blueapron.com' },
+  { name: 'Dollar Shave Club', domain: 'dollarshaveclub.com' },
+  { name: 'Birchbox', domain: 'birchbox.com' },
+  
+  // Security & Privacy
+  { name: 'NordVPN', domain: 'nordvpn.com' },
+  { name: 'ExpressVPN', domain: 'expressvpn.com' },
+  { name: 'Surfshark', domain: 'surfshark.com' },
+  { name: 'Proton VPN', domain: 'protonvpn.com' },
+  { name: '1Password', domain: '1password.com' },
+  { name: 'LastPass', domain: 'lastpass.com' },
+  { name: 'Dashlane', domain: 'dashlane.com' },
+  { name: 'Bitdefender', domain: 'bitdefender.com' },
+  { name: 'McAfee', domain: 'mcafee.com' },
+  { name: 'Norton', domain: 'norton.com' },
+  
+  // News & Content
+  { name: 'New York Times', domain: 'nytimes.com' },
+  { name: 'Washington Post', domain: 'washingtonpost.com' },
+  { name: 'The Guardian', domain: 'theguardian.com' },
+  { name: 'Wall Street Journal', domain: 'wsj.com' },
+  { name: 'The Economist', domain: 'economist.com' },
+  { name: 'Medium', domain: 'medium.com' },
+  { name: 'Bloomberg', domain: 'bloomberg.com' },
+  
+  // Gaming
   { name: 'Xbox Game Pass', domain: 'xbox.com' },
+  { name: 'PlayStation Plus', domain: 'playstation.com' },
+  { name: 'Nintendo Switch Online', domain: 'nintendo.com' },
+  { name: 'EA Play', domain: 'ea.com' },
+  { name: 'GeForce Now', domain: 'nvidia.com' },
+  { name: 'Apple Arcade', domain: 'apple.com' },
+  { name: 'Google Play Pass', domain: 'play.google.com' },
+  
+  // Other
   { name: 'Gym Membership', domain: null },
   { name: 'VPN Service', domain: null },
   { name: 'Mobile Data', domain: null },
@@ -57,33 +169,56 @@ const getCachedIconUrl = async (appName, domain) => {
 }
 
 const FALLBACK_ICONS = {
-  Netflix: Film,
-  Spotify: Headphones,
-  YouTube: Film,
-  Disney: Film,
-  HBO: Film,
-  Prime: ShoppingBag,
-  AppleMusic: Headphones,
-  Google: Cloud,
-  iCloud: Cloud,
-  Dropbox: Cloud,
-  Microsoft: Smartphone,
-  Notion: Globe,
-  Slack: Globe,
-  Zoom: Smartphone,
-  PlayStation: Dumbbell,
-  Xbox: Dumbbell,
-  Gym: Dumbbell,
-  VPN: Globe,
-  Mobile: Smartphone,
-  Internet: Globe,
-  Electric: Zap,
-  Rent: Home,
-  Food: Utensils,
-  AppleTV: Film,
-  Hulu: Film,
-  Paramount: Film,
-  Default: CreditCard
+  // Streaming
+  Netflix: Film, Hulu: Film, Disney: Film, HBO: Film, Paramount: Film,
+  Peacock: Film, AppleTV: Film, Crunchyroll: Film, Starz: Film,
+  Showtime: Film, Mubi: Film, Shudder: Film, Tubi: Film,
+  PlutoTV: Film, Hayu: Film, BritBox: Film, AcornTV: Film,
+  CuriosityStream: Film, FuboTV: Film, SlingTV: Film, DAZN: Film,
+  ESPN: Film, Discovery: Film,
+  
+  // Music
+  Spotify: Headphones, AppleMusic: Headphones, AmazonMusic: Headphones,
+  Deezer: Headphones, Tidal: Headphones, YouTubeMusic: Headphones,
+  SoundCloud: Headphones, Pandora: Headphones, Audible: Headphones,
+  
+  // Productivity
+  Notion: Globe, Slack: Globe, Zoom: Smartphone, Asana: Globe,
+  Trello: Globe, Evernote: Globe, Microsoft: Smartphone,
+  Google: Cloud, Dropbox: Cloud, Adobe: Globe, Canva: Globe,
+  Figma: Globe, GitHub: Globe, Salesforce: Globe, HubSpot: Globe,
+  Jira: Globe, Confluence: Globe, Monday: Globe, Webflow: Globe,
+  
+  // Cloud
+  GoogleOne: Cloud, iCloud: Cloud, OneDrive: Cloud, Backblaze: Cloud,
+  pCloud: Cloud, Box: Cloud, Sync: Cloud,
+  
+  // Mobile
+  Telegram: Smartphone, Snapchat: Smartphone, Reddit: Globe,
+  LinkedIn: Globe, Strava: Dumbbell, Calm: Dumbbell, Headspace: Dumbbell,
+  MyFitnessPal: Dumbbell, Duolingo: Globe, Tinder: Globe,
+  Bumble: Globe, Fitbod: Dumbbell, Peloton: Dumbbell,
+  
+  // Shopping
+  Amazon: ShoppingBag, Instacart: ShoppingBag, HelloFresh: Utensils,
+  BlueApron: Utensils, DollarShaveClub: ShoppingBag, Birchbox: ShoppingBag,
+  
+  // Security
+  NordVPN: Globe, ExpressVPN: Globe, Surfshark: Globe, ProtonVPN: Globe,
+  OnePassword: Globe, LastPass: Globe, Dashlane: Globe,
+  Bitdefender: Globe, McAfee: Globe, Norton: Globe,
+  
+  // News
+  NYT: Globe, WashingtonPost: Globe, Guardian: Globe, WSJ: Globe,
+  Economist: Globe, Medium: Globe, Bloomberg: Globe,
+  
+  // Gaming
+  PlayStation: Dumbbell, Xbox: Dumbbell, Nintendo: Dumbbell,
+  EA: Dumbbell, GeForceNow: Dumbbell, AppleArcade: Dumbbell,
+  
+  // Others
+  Gym: Dumbbell, VPN: Globe, Mobile: Smartphone, Internet: Globe,
+  Electric: Zap, Rent: Home, Food: Utensils, Default: CreditCard
 }
 
 const LogoImg = ({ appName, domain, size = 32, style = {} }) => {
@@ -113,30 +248,57 @@ const LogoImg = ({ appName, domain, size = 32, style = {} }) => {
 }
 
 const FALLBACK_COLORS = {
-  Netflix: '#E50914',
-  Spotify: '#1DB954',
-  YouTube: '#FF0000',
-  Disney: '#113CCF',
-  HBO: '#5822B4',
-  Prime: '#00A8E1',
-  AppleMusic: '#FA243C',
-  Google: '#4285F4',
-  iCloud: '#3693F3',
-  Dropbox: '#0061FF',
-  Microsoft: '#00A4EF',
-  Notion: '#000000',
-  Slack: '#4A154B',
-  Zoom: '#2D8CFF',
-  PlayStation: '#003791',
-  Xbox: '#107C10',
-  Gym: '#FF6B00',
-  VPN: '#C53030',
-  Mobile: '#38B2AC',
-  Internet: '#3182CE',
-  Electric: '#ECC94B',
-  Rent: '#38A169',
-  Food: '#ED8936',
-  Default: '#6B7280'
+  // Streaming
+  Netflix: '#E50914', Hulu: '#1CE783', Disney: '#113CCF', HBO: '#5822B4',
+  Paramount: '#0064FF', Peacock: '#000000', AppleTV: '#000000', Crunchyroll: '#F47521',
+  Starz: '#8B5CF6', Showtime: '#E60000', Mubi: '#8B5CF6', Shudder: '#8B5CF6',
+  Tubi: '#FF6F3C', PlutoTV: '#FF6F3C', Hayu: '#8B5CF6', BritBox: '#8B5CF6',
+  AcornTV: '#8B5CF6', FuboTV: '#FF6F3C', SlingTV: '#FF6F3C', DAZN: '#FF6F3C',
+  ESPN: '#D40000', Discovery: '#FF6F3C',
+  
+  // Music
+  Spotify: '#1DB954', AppleMusic: '#FA243C', AmazonMusic: '#00A8E1',
+  Deezer: '#FEAA2D', Tidal: '#000000', YouTubeMusic: '#FF0000',
+  SoundCloud: '#FF5500', Pandora: '#224099', Audible: '#F79232',
+  
+  // Productivity
+  Notion: '#000000', Slack: '#4A154B', Zoom: '#2D8CFF', Asana: '#F06A6A',
+  Trello: '#0079BF', Evernote: '#2DBC60', Microsoft: '#00A4EF',
+  Google: '#4285F4', Dropbox: '#0061FF', Adobe: '#FF0000',
+  Canva: '#00C4CC', Figma: '#F24E1E', GitHub: '#181717',
+  Salesforce: '#00A1E0', HubSpot: '#FF7A59', Jira: '#0052CC',
+  Confluence: '#0052CC', Monday: '#FF3D57', Webflow: '#4353FF',
+  
+  // Cloud
+  GoogleOne: '#4285F4', iCloud: '#3693F3', OneDrive: '#0078D4',
+  Backblaze: '#E53935', pCloud: '#4A90D9', Box: '#0061D5', Sync: '#0078D4',
+  
+  // Mobile
+  Telegram: '#229ED9', Snapchat: '#FFFC00', Reddit: '#FF4500',
+  LinkedIn: '#0A66C2', Strava: '#FC4C02', Calm: '#7F72F7',
+  Headspace: '#F47D31', MyFitnessPal: '#0066CC', Duolingo: '#58CC02',
+  Tinder: '#FE3C72', Bumble: '#FFBE0B', Fitbod: '#FF6B00', Peloton: '#D60017',
+  
+  // Shopping
+  Amazon: '#FF9900', Instacart: '#43B02A', HelloFresh: '#06C167',
+  BlueApron: '#0795E8', DollarShaveClub: '#FF6F3C', Birchbox: '#FF6F3C',
+  
+  // Security
+  NordVPN: '#4687FF', ExpressVPN: '#DA3940', Surfshark: '#2A628F',
+  ProtonVPN: '#6D4AFF', OnePassword: '#0094F5', LastPass: '#D32D27',
+  Dashlane: '#007C97', Bitdefender: '#E53935', McAfee: '#D83B01', Norton: '#FF6B00',
+  
+  // News
+  NYT: '#000000', WashingtonPost: '#231F20', Guardian: '#052962',
+  WSJ: '#0080C3', Economist: '#E3120B', Medium: '#000000', Bloomberg: '#2800FF',
+  
+  // Gaming
+  PlayStation: '#003791', Xbox: '#107C10', Nintendo: '#E60012',
+  EA: '#000000', GeForceNow: '#76B900', AppleArcade: '#000000',
+  
+  // Others
+  Gym: '#FF6B00', VPN: '#C53030', Mobile: '#38B2AC', Internet: '#3182CE',
+  Electric: '#ECC94B', Rent: '#38A169', Food: '#ED8936', Default: '#6B7280'
 }
 
 export const Subscriptions = () => {
@@ -164,7 +326,7 @@ export const Subscriptions = () => {
     : POPULAR_APPS.slice(0, 12)
 
   const selectApp = async (app) => {
-    const iconName = app.name.split(' ')[0]
+    const iconName = app.name.replace(/\s+/g, '')
     const iconUrl = app.domain ? await getCachedIconUrl(app.name, app.domain) : ''
     setFormData(prev => ({
       ...prev,
