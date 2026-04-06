@@ -147,25 +147,28 @@ const LOGO_DEV_KEY = 'pk_A3K1-sYYT3eQr3wWo6H-MA'
 const getCachedIconUrl = async (appName, domain) => {
   if (!domain) return null
   
-  const { data: existing } = await supabase
-    .from('app_icons')
-    .select('icon_url')
-    .eq('name', appName)
-    .maybeSingle()
-  
-  if (existing?.icon_url) {
-    return existing.icon_url
+  try {
+    const { data: existing } = await supabase
+      .from('app_icons')
+      .select('icon_url')
+      .eq('name', appName)
+      .maybeSingle()
+    
+    if (existing?.icon_url) {
+      return existing.icon_url
+    }
+    
+    const logoUrl = `https://img.logo.dev/${domain}?token=${LOGO_DEV_KEY}&size=128&format=png`
+    
+    await supabase
+      .from('app_icons')
+      .upsert([{ name: appName, domain, icon_url: logoUrl }], { onConflict: 'name' })
+      .catch(() => {})
+    
+    return logoUrl
+  } catch (err) {
+    return `https://img.logo.dev/${domain}?token=${LOGO_DEV_KEY}&size=128&format=png`
   }
-  
-  const logoUrl = `https://img.logo.dev/${domain}?token=${LOGO_DEV_KEY}&size=128&format=png&fit=true`
-  
-  await supabase
-    .from('app_icons')
-    .insert([{ name: appName, domain, icon_url: logoUrl }])
-    .onConflict('name')
-    .ignoreDuplicates()
-  
-  return logoUrl
 }
 
 const FALLBACK_ICONS = {
@@ -228,13 +231,22 @@ const LogoImg = ({ appName, domain, size = 32, style = {} }) => {
   const fallbackIcon = FALLBACK_ICONS[iconKey] || FALLBACK_ICONS['Default']
   const fallbackColor = FALLBACK_COLORS[iconKey] || FALLBACK_COLORS['Default']
   const [iconUrl, setIconUrl] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
-    if (!domain) return
+    if (!domain) {
+      setLoading(false)
+      return
+    }
     setLoading(true)
+    setError(false)
     getCachedIconUrl(appName, domain).then(url => {
       setIconUrl(url?.replace('size=128', `size=${size}`))
+      setLoading(false)
+      if (!url) setError(true)
+    }).catch(() => {
+      setError(true)
       setLoading(false)
     })
   }, [appName, domain, size])
@@ -252,7 +264,7 @@ const LogoImg = ({ appName, domain, size = 32, style = {} }) => {
     )
   }
 
-  if (!iconUrl || !domain) {
+  if (error || !iconUrl) {
     return (
       <div style={{ 
         width: size, height: size, 
@@ -270,10 +282,7 @@ const LogoImg = ({ appName, domain, size = 32, style = {} }) => {
       src={iconUrl} 
       alt={appName}
       style={{ ...style, width: size, height: size, borderRadius: 6 }}
-      onError={(e) => {
-        e.target.style.display = 'none'
-        e.target.nextSibling.style.display = 'flex'
-      }}
+      onError={() => setError(true)}
     />
   )
 }
