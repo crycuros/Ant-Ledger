@@ -1,15 +1,33 @@
 import { useState, useEffect, useRef } from 'react'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
 import { IoAdd } from 'react-icons/io5'
-import { useTransactions } from '../hooks/useData'
+import { useTransactions, useCategories } from '../hooks/useData'
 import { useSettings } from '../context/SettingsContext'
 import { format } from 'date-fns'
 import { BiSolidStopwatch } from 'react-icons/bi'
+import { 
+  Utensils, FileText, Car, Home, Heart, 
+  PlayCircle, Briefcase, ShoppingCart, Book, 
+  MoreHorizontal, Wallet
+} from 'lucide-react'
+
+const ICONS = {
+  Food: Utensils,
+  Bills: FileText,
+  Transport: Car,
+  Housing: Home,
+  Misc: MoreHorizontal,
+  Salary: Wallet,
+  Freelance: Briefcase,
+  Business: Wallet,
+  Others: MoreHorizontal
+}
 
 const COLORS = ['#f59e0b', '#10b981', '#ef4444', '#8b5cf6', '#3b82f6', '#ec4899', '#06b6d4', '#84cc16']
 
 export const Dashboard = () => {
   const { transactions } = useTransactions()
+  const { categories } = useCategories()
   const [showExpenseModal, setShowExpenseModal] = useState(false)
   const [showIncomeModal, setShowIncomeModal] = useState(false)
 
@@ -36,9 +54,16 @@ export const Dashboard = () => {
 
   const recentTransactions = transactions.slice(0, 5)
 
-  const getCategoryIcon = (cat) => {
-    const icons = { Food: '🍔', Bills: '📄', Transport: '🚗', Housing: '🏠', Misc: '📦', Salary: '💰', Freelance: '💼', Gift: '🎁', Other: '💵' }
-    return icons[cat] || '📦'
+  const getCategoryData = (catName) => {
+    if (!categories?.all) return null
+    return categories.all.find(c => c.name === catName)
+  }
+
+  const renderIcon = (catName, size = 20, color = 'currentColor') => {
+    const catData = getCategoryData(catName)
+    const iconName = catData?.icon || catName
+    const IconComponent = ICONS[iconName] || MoreHorizontal
+    return <IconComponent size={size} color={catData?.color || color} />
   }
 
   return (
@@ -120,7 +145,7 @@ export const Dashboard = () => {
             {recentTransactions.map(t => (
               <div key={t.id} className="transaction-item">
                 <div className="transaction-info">
-                  <span className="transaction-icon">{getCategoryIcon(t.category)}</span>
+                  <span className="transaction-icon" style={{ display: 'flex' }}>{renderIcon(t.category)}</span>
                   <div className="transaction-details">
                     <h4>{t.category}</h4>
                     <p>{format(new Date(t.date), 'MMM d, yyyy')}</p>

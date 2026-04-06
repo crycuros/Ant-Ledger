@@ -82,15 +82,10 @@ export const useBudgets = () => {
 
 export const useCategories = () => {
   const { user } = useAuth()
-  const [categories, setCategories] = useState([])
+  const [categories, setCategories] = useState({ expense: [], income: [] })
 
-  const defaultCategories = [
-    { name: 'Food', icon: '🍔' },
-    { name: 'Bills', icon: '📄' },
-    { name: 'Transport', icon: '🚗' },
-    { name: 'Housing', icon: '🏠' },
-    { name: 'Misc', icon: '📦' },
-  ]
+  const defaultExpenseCategories = ['Food', 'Bills', 'Transport', 'Housing', 'Misc']
+  const defaultIncomeSources = ['Salary', 'Freelance', 'Business', 'Others']
 
   const fetchCategories = async () => {
     if (!user) return
@@ -101,24 +96,38 @@ export const useCategories = () => {
     
     if (!error) {
       const customCats = data || []
-      setCategories([...defaultCategories, ...customCats])
+      setCategories({
+        expense: [...defaultExpenseCategories, ...customCats.filter(c => c.type === 'expense').map(c => c.name)],
+        income: [...defaultIncomeSources, ...customCats.filter(c => c.type === 'income').map(c => c.name)],
+        all: customCats
+      })
     }
   }
 
-  const addCategory = async (name, icon) => {
+  const addCategory = async (name, type, icon = 'Utensils', color = '#f59e0b') => {
     const { data, error } = await supabase
       .from('categories')
-      .insert([{ name, icon, user_id: user.id, is_custom: true }])
+      .insert([{ name, icon, color, user_id: user.id, is_custom: true, type }])
       .select()
     
     if (error) throw error
-    setCategories(prev => [...prev, data[0]])
+    await fetchCategories()
     return data[0]
+  }
+
+  const deleteCategory = async (id) => {
+    const { error } = await supabase
+      .from('categories')
+      .delete()
+      .eq('id', id)
+    
+    if (error) throw error
+    await fetchCategories()
   }
 
   useEffect(() => {
     fetchCategories()
   }, [user])
 
-  return { categories, addCategory, fetchCategories }
+  return { categories, addCategory, deleteCategory, fetchCategories }
 }

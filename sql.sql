@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS transactions (
   category TEXT NOT NULL,
   date DATE NOT NULL DEFAULT CURRENT_DATE,
   notes TEXT,
+  expense_type TEXT DEFAULT 'one-time' CHECK (expense_type IN ('one-time', 'recurring')),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -15,7 +16,9 @@ CREATE TABLE IF NOT EXISTS categories (
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   name TEXT NOT NULL,
   icon TEXT,
-  is_custom BOOLEAN DEFAULT true
+  color TEXT,
+  is_custom BOOLEAN DEFAULT true,
+  type TEXT NOT NULL CHECK (type IN ('income', 'expense'))
 );
 
 CREATE TABLE IF NOT EXISTS budgets (

@@ -1,7 +1,7 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useSettings } from '../context/SettingsContext'
-import { IoHome, IoReceipt, IoPieChart, IoWallet, IoSettings, IoLogOut, IoTime } from 'react-icons/io5'
+import { IoHome, IoReceipt, IoPieChart, IoWallet, IoSettings, IoLogOut, IoTime, IoList } from 'react-icons/io5'
 import { GiAnt } from 'react-icons/gi'
 
 export const Layout = () => {
@@ -37,6 +37,9 @@ export const Layout = () => {
           </NavLink>
           <NavLink to="/reports" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
             <IoPieChart size={20} /> Reports
+          </NavLink>
+          <NavLink to="/categories" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            <IoList size={20} /> Categories
           </NavLink>
           <button onClick={toggleTimeFormat} className="nav-link" style={{ background: 'none', border: 'none', width: '100%', cursor: 'pointer', textAlign: 'left' }}>
             <IoTime size={20} /> {timeFormat === '12hr' ? '12 Hour' : '24 Hour'}
