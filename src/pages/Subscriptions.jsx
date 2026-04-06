@@ -230,60 +230,16 @@ const LogoImg = ({ appName, domain, size = 32, style = {} }) => {
   const iconKey = getAppIconKey(appName)
   const fallbackIcon = FALLBACK_ICONS[iconKey] || FALLBACK_ICONS['Default']
   const fallbackColor = FALLBACK_COLORS[iconKey] || FALLBACK_COLORS['Default']
-  const [iconUrl, setIconUrl] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
 
-  useEffect(() => {
-    if (!domain) {
-      setLoading(false)
-      return
-    }
-    setLoading(true)
-    setError(false)
-    getCachedIconUrl(appName, domain).then(url => {
-      setIconUrl(url?.replace('size=128', `size=${size}`))
-      setLoading(false)
-      if (!url) setError(true)
-    }).catch(() => {
-      setError(true)
-      setLoading(false)
-    })
-  }, [appName, domain, size])
-
-  if (loading) {
-    return (
-      <div style={{ 
-        width: size, height: size, 
-        borderRadius: 6, background: fallbackColor,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        ...style 
-      }}>
-        {fallbackIcon && <fallbackIcon size={size * 0.6} color="#fff" />}
-      </div>
-    )
-  }
-
-  if (error || !iconUrl) {
-    return (
-      <div style={{ 
-        width: size, height: size, 
-        borderRadius: 6, background: fallbackColor,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        ...style 
-      }}>
-        {fallbackIcon && <fallbackIcon size={size * 0.6} color="#fff" />}
-      </div>
-    )
-  }
-  
   return (
-    <img 
-      src={iconUrl} 
-      alt={appName}
-      style={{ ...style, width: size, height: size, borderRadius: 6 }}
-      onError={() => setError(true)}
-    />
+    <div style={{ 
+      width: size, height: size, 
+      borderRadius: 6, background: fallbackColor,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      ...style 
+    }}>
+      {fallbackIcon && <fallbackIcon size={size * 0.6} color="#fff" />}
+    </div>
   )
 }
 
