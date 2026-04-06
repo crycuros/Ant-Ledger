@@ -144,31 +144,9 @@ const POPULAR_APPS = [
 
 const LOGO_DEV_KEY = import.meta.env.VITE_LOGO_DEV_KEY || 'pk_A3K1-sYYT3eQr3wWo6H-MA'
 
-const getCachedIconUrl = async (appName, domain) => {
+const getLogoUrl = (domain, size = 128) => {
   if (!domain) return null
-  
-  try {
-    const { data: existing } = await supabase
-      .from('app_icons')
-      .select('icon_url')
-      .eq('name', appName)
-      .maybeSingle()
-    
-    if (existing?.icon_url) {
-      return existing.icon_url
-    }
-    
-    const logoUrl = `https://img.logo.dev/${domain}?token=${LOGO_DEV_KEY}&size=128&format=png`
-    
-    await supabase
-      .from('app_icons')
-      .upsert([{ name: appName, domain, icon_url: logoUrl }], { onConflict: 'name' })
-      .catch(() => {})
-    
-    return logoUrl
-  } catch {
-    return `https://img.logo.dev/${domain}?token=${LOGO_DEV_KEY}&size=128&format=png`
-  }
+  return `https://img.logo.dev/${domain}?token=${LOGO_DEV_KEY}&size=${size}&format=png`
 }
 
 const FALLBACK_ICONS = {
@@ -230,16 +208,28 @@ const LogoImg = ({ appName, domain, size = 32, style = {} }) => {
   const iconKey = getAppIconKey(appName)
   const fallbackIcon = FALLBACK_ICONS[iconKey] || FALLBACK_ICONS['Default']
   const fallbackColor = FALLBACK_COLORS[iconKey] || FALLBACK_COLORS['Default']
+  const [imgError, setImgError] = useState(false)
+
+  if (!domain || imgError) {
+    return (
+      <div style={{ 
+        width: size, height: size, 
+        borderRadius: 6, background: fallbackColor,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        ...style 
+      }}>
+        {fallbackIcon && <fallbackIcon size={size * 0.6} color="#fff" />}
+      </div>
+    )
+  }
 
   return (
-    <div style={{ 
-      width: size, height: size, 
-      borderRadius: 6, background: fallbackColor,
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      ...style 
-    }}>
-      {fallbackIcon && <fallbackIcon size={size * 0.6} color="#fff" />}
-    </div>
+    <img 
+      src={getLogoUrl(domain, size)} 
+      alt={appName}
+      style={{ ...style, width: size, height: size, borderRadius: 6 }}
+      onError={() => setImgError(true)}
+    />
   )
 }
 
@@ -321,14 +311,14 @@ export const Subscriptions = () => {
     ? POPULAR_APPS.filter(app => app.name.toLowerCase().includes(searchQuery.toLowerCase()))
     : POPULAR_APPS.slice(0, 12)
 
-  const selectApp = async (app) => {
-    const iconName = app.name.replace(/\s+/g, '')
-    const iconUrl = app.domain ? await getCachedIconUrl(app.name, app.domain) : ''
+  const selectApp = (app) => {
+    const iconKey = app.name.replace(/\s+/g, '')
+    const iconUrl = app.domain ? getLogoUrl(app.domain, 128) : ''
     setFormData(prev => ({
       ...prev,
       name: app.name,
-      icon: iconName,
-      iconColor: FALLBACK_COLORS[iconName] || FALLBACK_COLORS['Default'],
+      icon: iconKey,
+      iconColor: FALLBACK_COLORS[iconKey] || FALLBACK_COLORS['Default'],
       iconUrl
     }))
     setSearchQuery('')
